@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  wbd-rest-service:
+    container_name: wbd-rest-service
+    build:
+      dockerfile: Dockerfile
+    ports:
+      - 5000:5000
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+    depends_on:
+      wbd-rest-db:
+        condition: service_healthy
+    
+  wbd-rest-db:
+    container_name: wbd-rest-db
+    image: mysql:5.7.43
+    restart: unless-stopped
+    ports:
+      - 3307:3306
+    env_file:
+      - .env
+    volumes:
+      - dbdata:/var/lib/mysql/
+      - /mysql/my.cnf:/etc/mysql/my.cnf
+    healthcheck:
+      test: mysql -h localhost -u root --password=$$MYSQL_ROOT_PASSWORD -e 'SELECT 1'
+      interval: 5s
+      timeout: 5s
+      retries: 10
