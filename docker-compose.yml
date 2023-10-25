@@ -21,10 +21,15 @@ services:
     restart: unless-stopped
     ports:
       - 3307:3306
+    environment:
+      - MYSQL_ROOT_PASSWORD=$$MYSQL_ROOT_PASSWORD
+      - MYSQL_DATABASE=$$MYSQL_DATABASE
+      - MYSQL_USER=$$MYSQL_USER
+      - MYSQL_PASSWORD=$$MYSQL_PASSWORD
     env_file:
       - .env
     volumes:
-      - dbdata:/var/lib/mysql/
+      - wbd-rest-dbdata:/var/lib/mysql/
       - /mysql/my.cnf:/etc/mysql/my.cnf
     healthcheck:
       test: mysql -h localhost -u root --password=$$MYSQL_ROOT_PASSWORD -e 'SELECT 1'
