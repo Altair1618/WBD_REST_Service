@@ -7,8 +7,7 @@ services:
       dockerfile: Dockerfile
     ports:
       - 5000:5000
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - ./src:/app/src
     depends_on:
@@ -21,13 +20,7 @@ services:
     restart: unless-stopped
     ports:
       - 3307:3306
-    environment:
-      - MYSQL_ROOT_PASSWORD=$$MYSQL_ROOT_PASSWORD
-      - MYSQL_DATABASE=$$MYSQL_DATABASE
-      - MYSQL_USER=$$MYSQL_USER
-      - MYSQL_PASSWORD=$$MYSQL_PASSWORD
-    env_file:
-      - .env
+    env_file: .env
     volumes:
       - wbd-rest-dbdata:/var/lib/mysql/
       - /mysql/my.cnf:/etc/mysql/my.cnf
