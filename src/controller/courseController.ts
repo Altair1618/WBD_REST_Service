@@ -178,4 +178,219 @@ export class CourseController {
 
     return;
   }
+
+  public async getCourse(req: Request, res: Response): Promise<void> {
+    try {
+      const kode = req.params.id;
+
+      const course = await prisma.course.findUnique({
+        where: {
+          kode: kode,
+        },
+      });
+
+      const fetchedData = await fetch(`${process.env.PHP_APP}/api/courses/${kode}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const courseData = await fetchedData.json();
+
+      if (courseData['status'] === 'success') {
+        const temp = {
+          ...course,
+          nama: courseData['data']['nama'],
+          deskripsi: courseData['data']['deskripsi'],
+          kode_program_studi: courseData['data']['kode_program_studi'],
+        };
+
+        res.status(200).json({
+          status: 'success',
+          message: 'Berhasil mendapatkan data mata kuliah',
+          data: temp,
+        });
+      } else {
+        res.status(500).json({
+          status: 'error',
+          message: 'Gagal mendapatkan data mata kuliah',
+          data: null,
+        });
+      }
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        status: 'error',
+        message: 'Gagal mendapatkan data mata kuliah',
+        data: null,
+      });
+    }
+
+    return;
+  }
+
+  public async updateCourse(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    const nama: string = req.body.nama;
+    const deskripsi: string = req.body.deskripsi || null;
+    const kode_program_studi: number = req.body.kode_program_studi;
+
+    if (!nama) {
+      res.status(400).json({
+        status: 'error',
+        message: 'Data mata kuliah tidak lengkap',
+        data: null,
+      });
+
+      return;
+    }
+
+    let kode: string;
+    try {
+      const course = await prisma.course.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!course) {
+        res.status(404).json({
+          status: 'error',
+          message: 'Mata kuliah tidak ditemukan',
+          data: null,
+        });
+
+        return;
+      }
+
+      kode = course.kode;
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        status: 'error',
+        message: 'Mata kuliah tidak ditemukan',
+        data: null,
+      });
+
+      return;
+    }
+
+    let responseData;
+
+    try {
+      const fetchedData = await fetch(`${process.env.PHP_APP}/api/courses/${kode}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nama: nama,
+          deskripsi: deskripsi || null,
+          kode_program_studi: kode_program_studi,
+        }),
+      });
+
+      responseData = await fetchedData.json();
+      if (responseData['status'] !== 'success') {
+        res.status(500).json({
+          status: 'error',
+          message: 'Gagal mengubah data mata kuliah',
+          data: null,
+        });
+
+        return;
+      }
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        status: 'error',
+        message: 'Gagal mengubah data mata kuliah',
+        data: null,
+      });
+
+      return;
+    }
+
+    try {
+      const course = await prisma.course.update({
+        where: {
+          id: id,
+        },
+        data: {
+          kode: kode,
+        },
+      });
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Berhasil mengubah data mata kuliah',
+        data: {
+          ...responseData['data'],
+          id: course.id,
+        },
+      });
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        status: 'error',
+        message: 'Gagal mengubah data mata kuliah',
+        data: null,
+      });
+    }
+
+    return;
+  }
+
+  public async deleteCourse(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+
+    try {
+      const course = await prisma.course.delete({
+        where: {
+          id: id,
+        },
+      });
+
+      const fetchedData = await fetch(`${process.env.PHP_APP}/api/courses/${course.kode}`, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const responseData = await fetchedData.json();
+      if (responseData['status'] !== 'success') {
+        res.status(500).json({
+          status: 'error',
+          message: 'Gagal menghapus data mata kuliah',
+          data: null,
+        });
+
+        return;
+      }
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Berhasil menghapus data mata kuliah',
+        data: null,
+      });
+
+      return;
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        status: 'error',
+        message: 'Gagal menghapus data mata kuliah',
+        data: null,
+      });
+    }
+
+    return;
+  }
 }
