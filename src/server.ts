@@ -2,7 +2,7 @@ import cors from 'cors';
 import express from 'express';
 import { Request, Response } from 'express';
 
-import { CourseRouter } from './utils/router';
+import { CourseRouter } from './routers/courseRouter';
 
 const app = express();
 const port = 5000;
