@@ -1,7 +1,8 @@
 import cors from 'cors';
 import express from 'express';
 import { Request, Response } from 'express';
-import dotenv from 'dotenv';
+
+import { CourseRouter } from './utils/router';
 
 const app = express();
 const port = 5000;
@@ -9,12 +10,14 @@ const port = 5000;
 app.use(cors());
 app.use(express.json());
 
-dotenv.config();
+const courseRouter = new CourseRouter();
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello!');
 });
 
+app.use(courseRouter.getRouter());
+
 app.listen(port, () => {
-  console.log(`Application started on port ${port}!`);
+  console.log(`Server started on port ${port}!`);
 });

@@ -4,10 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "dev": "nodemon --exec ts-node src/server.ts",
+    "dev": "npx prisma generate && nodemon --exec ts-node src/server.ts",
     "start": "node dist/server.js",
     "build": "npx tsc",
-    "start:prod": "npm run build && npm run start"
+    "start:prod": "npm run build && npx prisma generate && npm run start"
   },
   "prisma": {
     "seed": "ts-node prisma/seed.ts"
