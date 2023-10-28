@@ -20,6 +20,18 @@ export class CourseRouter {
       this.courseController.createCourse(req, res);
     });
 
+    router.get("/courses/:id", (req, res) => {
+      this.courseController.getCourse(req, res);
+    });
+
+    router.put("/courses/:id", (req, res) => {
+      this.courseController.updateCourse(req, res);
+    });
+
+    router.delete("/courses/:id", (req, res) => {
+      this.courseController.deleteCourse(req, res);
+    });
+
     return router;
   }
 }
