@@ -16,6 +16,10 @@ export class CourseRouter {
       this.courseController.getCourses(req, res);
     });
 
+    router.post("/courses", (req, res) => {
+      this.courseController.createCourse(req, res);
+    });
+
     return router;
   }
 }
