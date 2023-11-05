@@ -25,7 +25,7 @@ services:
       - wbd-rest-dbdata:/var/lib/mysql/
       - /mysql/my.cnf:/etc/mysql/my.cnf
     healthcheck:
-      test: mysql -h localhost -u root --password=$$MYSQL_ROOT_PASSWORD -e 'SELECT 1'
+      test: mysql -h localhost -u root --password=${REST_ROOT_PASSWORD} -e 'SELECT 1'
       interval: 5s
       timeout: 5s
       retries: 10
