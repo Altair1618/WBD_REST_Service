@@ -1,6 +1,6 @@
 import { Router } from "express";
 
-import { CourseController } from "../controller/courseController";
+import { CourseController } from "../controllers/courseController";
 
 export class CourseRouter {
   private courseController: CourseController;

@@ -9,9 +9,12 @@ datasource db {
 
 model User {
   id              String   @id @default(cuid())
+  username        String   @unique
+  email           String   @unique
   hashed_password String
   php_id          Int      @unique
   tipe            Int
+  status          Status   @default(PENDING)
   created_at      DateTime @default(now())
   updated_at      DateTime @default(now()) @updatedAt
   courses         Course[]
@@ -35,4 +38,9 @@ model CertificateTemplate {
   name_py    Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
+}
+
+enum Status {
+  PENDING
+  ACCEPTED
 }

@@ -1,1 +1,5 @@
+# Node Modules
 /node_modules
+
+# Database Volume
+/data

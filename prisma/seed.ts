@@ -12,6 +12,8 @@ async function main() {
     // Admin Seeding
     await prisma.user.create({
       data: {
+        username: 'admin',
+        email: 'admin@example.com',
         hashed_password: '$2a$10$VJD8MgmngLurQb0pGw.xLupWNtsT85bfBuddnnLG3qISqqmnPxFIu',  // pass: admin
         php_id: 1,
         tipe: 0,
@@ -25,6 +27,8 @@ async function main() {
     for (let i = startId; i <= lastId; i++) {
       const user = await prisma.user.create({
         data: {
+          username: `dosen${i}`,
+          email: `dosen${i}@example.com`,
           hashed_password: '$2a$10$Z3TcaW5X3DToRQyfbalRFeE5Gj1Q/Wl6BjzFcfu/ejTazNnaY8XO2',  // pass: dosen
           php_id: i,
           tipe: 1,
