@@ -171,31 +171,8 @@ export class UserController {
         });
     }
 
-    public async getUser(req: Request, res: Response) {
-        const { id } = req.params;
-
-        let user = null;
-        try {
-            user = await prisma.user.findUnique({
-                where: {
-                    id: id,
-                },
-                select: {
-                    id: true,
-                    username: true,
-                    email: true,
-                    tipe: true,
-                    php_id: true,
-                },
-            });
-        } catch (error) {
-            console.log(error);
-            return res.status(500).json({
-                status: 'error',
-                message: 'Terjadi kesalahan pada server',
-                data: null,
-            });
-        }
+    public async getCurrentUser(req: Request, res: Response) {
+        let user = res.locals.user;
 
         if (!user) {
             return res.status(404).json({
@@ -205,11 +182,35 @@ export class UserController {
             });
         }
 
+        let phpData = null;
+        try {
+            const response = await fetch(`${PHP_URL}/api/user?id=${user.php_id}`);
+            const parsedResponse = await response.json();
+            
+            if (parsedResponse['status'] !== 'success') {
+                return res.status(500).json({
+                    status: 'error',
+                    message: 'Terjadi kesalahan pada server',
+                    data: null,
+                });
+            }
+
+            phpData = parsedResponse['data'];
+        } catch (error) {
+            console.log(error);
+            return res.status(500).json({
+                status: 'error',
+                message: 'Terjadi kesalahan pada server',
+                data: null,
+            });
+        }
+
         return res.json({
             status: 'success',
             message: 'User berhasil ditemukan',
             data: {
                 user,
+                phpData,
             },
         });
     }

@@ -1,6 +1,7 @@
 import { Router } from 'express';
 
 import { UserController } from '../controllers/userController';
+import { validateJWT } from '../middlewares/authMiddleware';
 
 export class UserRouter {
   private userController: UserController;
@@ -18,6 +19,10 @@ export class UserRouter {
 
     router.post('/register', (req, res) => {
       this.userController.register(req, res);
+    });
+
+    router.get('/self', validateJWT, (req, res) => {
+      this.userController.getCurrentUser(req, res);
     });
 
     router.put('/user/accept/:id', (req, res) => {
