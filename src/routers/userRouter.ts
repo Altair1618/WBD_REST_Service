@@ -20,11 +20,11 @@ export class UserRouter {
       this.userController.register(req, res);
     });
 
-    router.put('/accept/:id', (req, res) => {
+    router.put('/user/accept/:id', (req, res) => {
       this.userController.acceptUser(req, res);
     });
 
-    router.put('/reject/:id', (req, res) => {
+    router.put('/user/reject/:id', (req, res) => {
       this.userController.rejectUser(req, res);
     });
 

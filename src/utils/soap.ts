@@ -44,7 +44,6 @@ export class SOAPClient {
             });
         });
 
-        console.log(this.response);
         return;
     }
 }
