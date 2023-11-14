@@ -8,16 +8,17 @@ datasource db {
 }
 
 model User {
-  id              String   @id @default(cuid())
-  username        String   @unique
-  email           String   @unique
-  hashed_password String
-  php_id          Int      @unique
-  tipe            Int
-  status          Status   @default(PENDING)
-  created_at      DateTime @default(now())
-  updated_at      DateTime @default(now()) @updatedAt
-  courses         Course[]
+  id                        String   @id @default(cuid())
+  username                  String   @unique
+  email                     String   @unique
+  hashed_password           String
+  php_id                    Int      @unique
+  tipe                      Int
+  status                    Status   @default(PENDING)
+  created_at                DateTime @default(now())
+  updated_at                DateTime @default(now()) @updatedAt
+  courses                   Course[]
+  certificate_template      CertificateTemplate?
 }
 
 model Course {
@@ -33,11 +34,15 @@ model Course {
 
 model CertificateTemplate {
   id         Int      @id @default(autoincrement())
+  user_id    String   @unique
   filename   String
   name_px    Int
   name_py    Int
   created_at DateTime @default(now())
   updated_at DateTime @default(now()) @updatedAt
+  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
+
+  @@index([user_id], map: "CertificateTemplate_user_id_fkey")
 }
 
 enum Status {

@@ -9,6 +9,7 @@ services:
       - 5000:5000
     env_file: .env
     volumes:
+      - ./prisma:/app/prisma
       - ./src:/app/src
     depends_on:
       wbd-rest-db:
