@@ -8,15 +8,15 @@ import prisma from "../utils/db";
 
 export class UserController {
     public async login(req: Request, res: Response) {
-        const { credential, password } = req.body;
+        const { credentials, password } = req.body;
 
         let user = null;
         try {
             user = await prisma.user.findFirst({
                 where: {
                     OR: [
-                        { username: credential },
-                        { email: credential },
+                        { username: credentials },
+                        { email: credentials },
                     ],
                 },
             });
@@ -74,9 +74,9 @@ export class UserController {
     };
 
     public async register(req: Request, res: Response) {
-        const { credential, password } = req.body;
+        const { credentials, password } = req.body;
 
-        if (!credential || !password) {
+        if (!credentials || !password) {
             return res.status(400).json({
                 status: 'error',
                 message: 'Data tidak lengkap',
@@ -89,8 +89,8 @@ export class UserController {
             user = await prisma.user.findFirst({
                 where: {
                     OR: [
-                        { username: credential },
-                        { email: credential },
+                        { username: credentials },
+                        { email: credentials },
                     ],
                 },
             });
@@ -111,7 +111,7 @@ export class UserController {
             });
         }
 
-        const responseData = await fetch(`${PHP_URL}/api/user?credentials=${credential}`);
+        const responseData = await fetch(`${PHP_URL}/api/user?credentials=${credentials}`);
         const userData = await responseData.json();
 
         if (userData['status'] !== 'success') {

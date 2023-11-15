@@ -1,4 +1,4 @@
-import { PrismaClient } from "@prisma/client";
+import { PrismaClient, Status } from "@prisma/client";
 
 const prisma = new PrismaClient();
 
@@ -12,16 +12,17 @@ async function main() {
     // Admin Seeding
     await prisma.user.create({
       data: {
-        username: 'admin',
-        email: 'admin@example.com',
+        username: 'admin1',
+        email: 'admin1@example.com',
         hashed_password: '$2a$10$VJD8MgmngLurQb0pGw.xLupWNtsT85bfBuddnnLG3qISqqmnPxFIu',  // pass: admin
         php_id: 1,
         tipe: 0,
+        status: Status.ACCEPTED,
       },
     });
 
     // Pengajar Seeding
-    let startId = 6, lastId = 8;
+    let startId = 1, lastId = 3;
 
     const userId: string[] = [];
     for (let i = startId; i <= lastId; i++) {
@@ -30,7 +31,7 @@ async function main() {
           username: `dosen${i}`,
           email: `dosen${i}@example.com`,
           hashed_password: '$2a$10$Z3TcaW5X3DToRQyfbalRFeE5Gj1Q/Wl6BjzFcfu/ejTazNnaY8XO2',  // pass: dosen
-          php_id: i,
+          php_id: i + 5,
           tipe: 1,
         },
       });
@@ -42,27 +43,27 @@ async function main() {
     const courseData = [
       {
         kode: 'IF1300',
-        user_id: userId[6],
+        user_id: userId[1],
       },
       {
         kode: 'IF1335',
-        user_id: userId[6],
+        user_id: userId[1],
       },
       {
         kode: 'IF1305',
-        user_id: userId[7],
+        user_id: userId[2],
       },
       {
         kode: 'IF1345',
-        user_id: userId[7],
+        user_id: userId[2],
       },
       {
         kode: 'IF1325',
-        user_id: userId[8],
+        user_id: userId[3],
       },
       {
         kode: 'IF1380',
-        user_id: userId[8],
+        user_id: userId[3],
       },
     ]
 
