@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { CertificateTemplateController } from "../controllers/certificateTemplateController";
+import { validateJWT } from "../middlewares/authMiddleware";
 
 export class CertificateTemplateRouter {
   private certificateTemplateController: CertificateTemplateController;
@@ -12,15 +13,15 @@ export class CertificateTemplateRouter {
   public getRouter(): Router {
     const router = Router();
 
-    router.get("/certificate", (req, res) => {
+    router.get("/certificate", validateJWT, (req, res) => {
       this.certificateTemplateController.getCertificateTemplate(req, res);
     });
 
-    router.post("/certificate", (req, res) => {
+    router.post("/certificate", validateJWT, (req, res) => {
       this.certificateTemplateController.createtCertificateTemplate(req, res);
     });
 
-    router.put("/certificate", (req, res) => {
+    router.put("/certificate", validateJWT, (req, res) => {
       this.certificateTemplateController.updateCertificateTemplate(req, res);
     });
 
