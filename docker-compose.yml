@@ -11,6 +11,7 @@ services:
     volumes:
       - ./prisma:/app/prisma
       - ./src:/app/src
+      - ./certificate_templates:/app/certificate_templates
     depends_on:
       wbd-rest-db:
         condition: service_healthy

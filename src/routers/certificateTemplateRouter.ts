@@ -29,6 +29,10 @@ export class CertificateTemplateRouter {
       this.certificateTemplateController.deleteCertificateTemplate(req, res);
     })
 
+    router.post("/certificate/send", validateJWT, (req, res) => {
+      this.certificateTemplateController.sendCertificate(req, res);
+    })
+
     return router;
   }
 }
