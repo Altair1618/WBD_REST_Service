@@ -42,7 +42,7 @@ function fileToBase64(filePath: string): Promise<string | null> {
 export class CertificateTemplateController {
   public async getCertificateTemplate(req: Request, res: Response): Promise<void> {
     try {
-      const userId = res.locals.user['id'];
+      const userId: string = res.locals.user['id'];
 
       const certificate: ICertificateTemplateData | null = await prisma.certificateTemplate.findFirst({
         where: {
@@ -85,7 +85,7 @@ export class CertificateTemplateController {
   }
 
   public async createtCertificateTemplate(req: Request, res: Response): Promise<void> {
-    const userId = res.locals.user['id'];
+    const userId: string = res.locals.user['id'];
 
     const filename: string = req.body.filename;
     const name_px: number = req.body.name_px;
@@ -129,7 +129,7 @@ export class CertificateTemplateController {
   }
 
   public async updateCertificateTemplate(req: Request, res: Response): Promise<void> {
-    const userId = res.locals.user['id'];
+    const userId: string = res.locals.user['id'];
 
     const filename: string = req.body.filename;
     const name_px: number = req.body.name_px;
@@ -189,5 +189,51 @@ export class CertificateTemplateController {
         data: null,
       });
     }
+  }
+
+  public async deleteCertificateTemplate(req: Request, res: Response): Promise<void> {
+    const userId: string = res.locals.user['id'];
+
+    try {
+      let certificate = await prisma.certificateTemplate.findFirst({
+        where: {
+          user_id: userId
+        }
+      });
+
+      if (!certificate) {
+        res.status(404).json({
+          status: 'error',
+          message: 'Template sertifikat tidak ditemukan',
+          data: null,
+        });
+
+        return;
+      }
+
+      certificate = await prisma.certificateTemplate.delete({
+        where: {
+          id: certificate.id
+        },
+      });
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Berhasil menghapus data template sertifikat',
+        data: null,
+      });
+
+      return;
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        status: 'error',
+        message: 'Gagal menghapus data template sertifikat',
+        data: null,
+      });
+    }
+
+    return;
   }
 }

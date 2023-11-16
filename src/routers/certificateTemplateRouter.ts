@@ -25,6 +25,10 @@ export class CertificateTemplateRouter {
       this.certificateTemplateController.updateCertificateTemplate(req, res);
     });
 
+    router.delete("/certificate", validateJWT, (req, res) => {
+      this.certificateTemplateController.deleteCertificateTemplate(req, res);
+    })
+
     return router;
   }
 }
