@@ -117,6 +117,7 @@ export class CourseController {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
+          userId: res.locals.user['php_id'],
           kode: kode,
           nama: nama,
           deskripsi: deskripsi || null,
@@ -177,15 +178,25 @@ export class CourseController {
 
   public async getCourse(req: Request, res: Response): Promise<void> {
     try {
-      const kode = req.params.id;
+      const id = req.params.id;
 
       const course = await prisma.course.findUnique({
         where: {
-          kode: kode,
+          id: id,
         },
       });
 
-      const fetchedData = await fetch(`${process.env.PHP_APP}/api/courses/${kode}`, {
+      if (!course) {
+        res.status(404).json({
+          status: 'error',
+          message: 'Mata kuliah tidak ditemukan',
+          data: null,
+        });
+
+        return;
+      }
+
+      const fetchedData = await fetch(`${process.env.PHP_APP}/api/courses/${course.kode}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
