@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import prisma from "../utils/db";
+import path from "path";
+import fs from "fs";
 
 interface ICertificateTemplateData {
   id: number;
@@ -11,10 +13,36 @@ interface ICertificateTemplateData {
   updated_at: Date;
 }
 
+
+function fileToBase64(filePath: string): Promise<string | null> {
+  return new Promise<string | null>((resolve, reject) => {
+    // Check if the file exists
+    if (!fs.existsSync(filePath)) {
+      reject(new Error('File not found'));
+      return;
+    }
+
+    // Read the file content
+    fs.readFile(filePath, (error, data) => {
+      if (error) {
+        reject(error);
+        return;
+      }
+
+      // Convert the file content to base64
+      const base64String = Buffer.from(data).toString('base64');
+      const mimeType = path.extname(filePath).slice(1); // Get the file extension as MIME type
+      const dataUrl = `data:${mimeType};base64,${base64String}`;
+
+      resolve(dataUrl);
+    });
+  });
+}
+
 export class CertificateTemplateController {
   public async getCertificateTemplate(req: Request, res: Response): Promise<void> {
     try {
-      const userId = 'clo9h7ep30001verhydbjlc4v';
+      const userId = res.locals.user['id'];
 
       const certificate: ICertificateTemplateData | null = await prisma.certificateTemplate.findFirst({
         where: {
@@ -22,20 +50,29 @@ export class CertificateTemplateController {
         }
       });
 
-      // apakah harus simpen file template di sini atau di SPA?
-      res.status(200).json({
-        status: 'success',
-        message: 'Berhasil mendapatkan data template sertifikat',
-        data: certificate === null ? {
-          filename: 'default.png', // harus mastiin ada file default.png di SPA
-          name_px: 250,            // ada juga opsi lain: bikin route buat ngeset
-          name_py: 150,            // default template dari SPA, dilakuin oleh admin
-        } : {
-          filename: certificate.filename,
-          name_px: certificate.name_px,
-          name_py: certificate.name_py,
-        },
-      });
+      if (!certificate) {
+        res.status(200).json({
+          status: 'success',
+          message: 'Berhasil mendapatkan data template sertifikat',
+          data: {
+            file: await fileToBase64("certificate_templates/default.png"),
+            name_px: 250,
+            name_py: 150,
+            default: true,
+          }
+        });
+      } else {
+        res.status(200).json({
+          status: 'success',
+          message: 'Berhasil mendapatkan data template sertifikat',
+          data: {
+            file: await fileToBase64(`certificate_templates/${certificate.filename}`),
+            name_px: certificate.name_px,
+            name_py: certificate.name_py,
+            default: false,
+          }
+        });
+      }
     } catch (error) {
       console.error(error);
 
@@ -48,7 +85,7 @@ export class CertificateTemplateController {
   }
 
   public async createtCertificateTemplate(req: Request, res: Response): Promise<void> {
-    const userId = 'clo9h7ep30001verhydbjlc4v';
+    const userId = res.locals.user['id'];
 
     const filename: string = req.body.filename;
     const name_px: number = req.body.name_px;
@@ -92,7 +129,7 @@ export class CertificateTemplateController {
   }
 
   public async updateCertificateTemplate(req: Request, res: Response): Promise<void> {
-    const userId = 'clo9h7ecourseControllerp30001verhydbjlc4v';
+    const userId = res.locals.user['id'];
 
     const filename: string = req.body.filename;
     const name_px: number = req.body.name_px;
