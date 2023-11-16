@@ -1,6 +1,7 @@
 import { Router } from "express";
 
 import { CourseController } from "../controllers/courseController";
+import { validateJWT } from "../middlewares/authMiddleware";
 
 export class CourseRouter {
   private courseController: CourseController;
@@ -12,23 +13,23 @@ export class CourseRouter {
   public getRouter(): Router {
     const router = Router();
 
-    router.get("/courses", (req, res) => {
+    router.get("/courses",  validateJWT, (req, res) => {
       this.courseController.getCourses(req, res);
     });
 
-    router.post("/courses", (req, res) => {
+    router.post("/courses", validateJWT, (req, res) => {
       this.courseController.createCourse(req, res);
     });
 
-    router.get("/courses/:id", (req, res) => {
+    router.get("/courses/:id", validateJWT, (req, res) => {
       this.courseController.getCourse(req, res);
     });
 
-    router.put("/courses/:id", (req, res) => {
+    router.put("/courses/:id", validateJWT, (req, res) => {
       this.courseController.updateCourse(req, res);
     });
 
-    router.delete("/courses/:id", (req, res) => {
+    router.delete("/courses/:id", validateJWT, (req, res) => {
       this.courseController.deleteCourse(req, res);
     });
 

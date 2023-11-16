@@ -24,9 +24,7 @@ interface ICourseFullData {
 export class CourseController {
   public async getCourses(req: Request, res: Response): Promise<void> {
     try {
-      // TODO: Implement Filter by Logged User
-      // Temporary Use php_id = 6
-      const userId = 'clo9h7ep30001verhydbjlc4v';
+      const userId = res.locals.user['id'];
 
       const page = req.body.page || 1;
 
@@ -93,9 +91,7 @@ export class CourseController {
   }
 
   public async createCourse(req: Request, res: Response): Promise<void> {
-    // TODO: Implement Filter by Logged User
-    // Temporary Use php_id = 6
-    const userId = 'clo9h7ep30001verhydbjlc4v';
+    const userId = res.locals.user['id'];
 
     const kode: string = req.body.kode;
     const nama: string = req.body.nama;
