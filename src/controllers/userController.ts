@@ -215,6 +215,70 @@ export class UserController {
         });
     }
 
+    public async getUnapprovedUsers(req: Request, res: Response) {
+        let page = parseInt(req.query.page as string) || 1;
+        let search = req.query.search as string || '';
+        
+        let users = null;
+        try {
+            users = await prisma.user.findMany({
+                where: {
+                    status: 'PENDING',
+                    OR: [
+                        { username: { contains: search } },
+                        { email: { contains: search } },
+                    ],
+                },
+                skip: (page - 1) * 10,
+                take: 10,
+                select: {
+                    id: true,
+                    username: true,
+                    email: true,
+                    php_id: true,
+                },
+            });
+        } catch (error) {
+            console.log(error);
+
+            return res.status(500).json({
+                status: 'error',
+                message: 'Terjadi kesalahan pada server',
+                data: null,
+            });
+        }
+
+        let count = null;
+        try {
+            count = await prisma.user.count({
+                where: {
+                    status: 'PENDING',
+                    OR: [
+                        { username: { contains: search } },
+                    ],
+                },
+            });
+        } catch (error) {
+            console.log(error);
+
+            return res.status(500).json({
+                status: 'error',
+                message: 'Terjadi kesalahan pada server',
+                data: null,
+            });
+        }
+
+        let maxPage = Math.ceil(count / 10);
+        return res.json({
+            status: 'success',
+            message: 'User berhasil ditemukan',
+            data: {
+                users,
+                maxPage,
+            },
+        });
+    }
+
     public async acceptUser(req: Request, res: Response) {
         const { id } = req.params;
 

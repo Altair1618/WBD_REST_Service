@@ -25,6 +25,10 @@ export class UserRouter {
       this.userController.getCurrentUser(req, res);
     });
 
+    router.get('/approvals', validateJWT, (req, res) => {
+      this.userController.getUnapprovedUsers(req, res);
+    });
+
     router.put('/user/accept/:id', validateJWT, (req, res) => {
       this.userController.acceptUser(req, res);
     });
