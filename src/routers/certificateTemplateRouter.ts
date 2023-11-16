@@ -20,7 +20,7 @@ export class CertificateTemplateRouter {
       this.certificateTemplateController.createtCertificateTemplate(req, res);
     });
 
-    router.put("/courses", (req, res) => {
+    router.put("/certificate", (req, res) => {
       this.certificateTemplateController.updateCertificateTemplate(req, res);
     });
 
