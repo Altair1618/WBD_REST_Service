@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { SOAPClient, SOAPServices } from "../utils/soap";
+import { PHP_URL } from "../config";
 
 export class SubscriptionController {
   public async getPendingSubscriptions(req: Request, res: Response): Promise<void> {
@@ -8,6 +9,12 @@ export class SubscriptionController {
     const response = client.getResponse()['return'];
 
     if (response['status'] === 'success') {
+      for (let user of response['data']['list']) {
+        const response = await fetch(`${PHP_URL}/api/user?id=${user['id']}`);
+        const data = await response.json();
+        user['username'] = data['data']['username'];  
+      }
+
       res.status(200).json({
         status: 'success',
         message: 'Berhasil mendapatkan data permintaan langganan',
