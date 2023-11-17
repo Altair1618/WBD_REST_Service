@@ -25,6 +25,10 @@ export class CourseRouter {
       this.courseController.getCourse(req, res);
     });
 
+    router.get("/courses/:id/students", validateJWT, (req, res) => {
+      this.courseController.getCourseStudents(req, res);
+    });
+
     router.put("/courses/:id", validateJWT, (req, res) => {
       this.courseController.updateCourse(req, res);
     });

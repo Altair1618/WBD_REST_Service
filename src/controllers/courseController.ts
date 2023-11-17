@@ -400,4 +400,62 @@ export class CourseController {
 
     return;
   }
+
+  public async getCourseStudents(req: Request, res: Response): Promise<void> {
+    const id = req.params.id;
+    const page = req.body.page || 1;
+    const search = req.body.search || '';
+
+    try {
+      const course = await prisma.course.findUnique({
+        where: {
+          id: id,
+        },
+      });
+
+      if (!course) {
+        res.status(404).json({
+          status: 'error',
+          message: 'Mata kuliah tidak ditemukan',
+          data: null,
+        });
+
+        return;
+      }
+
+      const fetchedData = await fetch(`${process.env.PHP_APP}/api/courses/${course.kode}/enrolled?page=${page}&search=${search}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      const responseData = await fetchedData.json();
+      if (responseData['status'] !== 'success') {
+        res.status(500).json({
+          status: 'error',
+          message: 'Gagal mendapatkan data mahasiswa',
+          data: null,
+        });
+
+        return;
+      }
+
+      res.status(200).json({
+        status: 'success',
+        message: 'Berhasil mendapatkan data mahasiswa',
+        data: responseData['data'],
+      });
+    } catch (error) {
+      console.log(error);
+
+      res.status(500).json({
+        status: 'error',
+        message: 'Gagal mendapatkan data mahasiswa',
+        data: null,
+      });
+    }
+
+    return;
+  }
 }
