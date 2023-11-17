@@ -61,13 +61,13 @@ export class CourseController {
             message: 'Gagal mendapatkan data mata kuliah',
             data: null,
           });
-          
+
           return;
         }
       }
 
       const totalCourses = await prisma.course.count();
-      const totalPage = Math.ceil(totalCourses / 10); 
+      const totalPage = Math.ceil(totalCourses / 10);
 
       res.status(200).json({
         status: 'success',
@@ -79,7 +79,7 @@ export class CourseController {
       });
     } catch (error) {
       console.log(error);
-      
+
       res.status(500).json({
         status: 'error',
         message: 'Gagal mendapatkan data mata kuliah',
@@ -107,7 +107,7 @@ export class CourseController {
 
       return;
     }
-    
+
     let responseData;
 
     try {
@@ -441,10 +441,15 @@ export class CourseController {
         return;
       }
 
+      const totalPage = Math.ceil(responseData['data'].length / 10)
+
       res.status(200).json({
         status: 'success',
         message: 'Berhasil mendapatkan data mahasiswa',
-        data: responseData['data'],
+        data: {
+          students: responseData['data'],
+          total_page: totalPage,
+        }
       });
     } catch (error) {
       console.log(error);

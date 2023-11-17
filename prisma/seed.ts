@@ -73,8 +73,6 @@ async function main() {
       });
     }
 
-    // Template Seeding
-    // TODO: Add template seeding
   } catch (err) {
     console.log(err);
   } finally {

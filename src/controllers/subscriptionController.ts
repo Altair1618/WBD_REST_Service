@@ -9,11 +9,21 @@ export class SubscriptionController {
     const response = client.getResponse()['return'];
 
     if (response['status'] === 'success') {
-      for (let user of response['data']['list']) {
-        const response = await fetch(`${PHP_URL}/api/user?id=${user['id']}`);
-        const data = await response.json();
-        user['username'] = data['data']['username'];  
+
+      response['data']['list'] = response['data']['list'] || [];
+
+      if (!Array.isArray(response['data']['list'])) {
+        response['data']['list'] = [response['data']['list']];
       }
+
+      // console.log(response['data']['list']);
+
+      for (let user of response['data']['list']) {
+        const response = await fetch(`${PHP_URL}/api/user?id=${user['userId']}`);
+        const data = await response.json();
+        user['username'] = data['data']['username'];
+      }
+
 
       res.status(200).json({
         status: 'success',
