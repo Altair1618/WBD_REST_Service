@@ -226,7 +226,6 @@ export class UserController {
                     status: 'PENDING',
                     OR: [
                         { username: { contains: search } },
-                        { email: { contains: search } },
                     ],
                 },
                 skip: (page - 1) * 10,
