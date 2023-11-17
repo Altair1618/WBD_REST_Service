@@ -213,6 +213,7 @@ REST Service ini merupakan service yang mengurus backend dari SPA Client.
         GET
       </td>
       <td>
+        Mengambil data template sertifikat yang telah dibuat oleh pengajar
       </td>
     </tr>
     <tr>
@@ -223,6 +224,7 @@ REST Service ini merupakan service yang mengurus backend dari SPA Client.
         POST
       </td>
       <td>
+        Membuat data template sertifikat baru
       </td>
     </tr>
     <tr>
@@ -233,6 +235,7 @@ REST Service ini merupakan service yang mengurus backend dari SPA Client.
         PUT
       </td>
       <td>
+        Mengubah data template sertifikat yang telah dibuat oleh pengajar
       </td>
     </tr>
     <tr>
@@ -243,6 +246,7 @@ REST Service ini merupakan service yang mengurus backend dari SPA Client.
         DELETE
       </td>
       <td>
+        Menghapus data template sertifikat yang telah dibuat oleh pengajar
       </td>
     </tr>
     <tr>
@@ -253,6 +257,7 @@ REST Service ini merupakan service yang mengurus backend dari SPA Client.
         POST
       </td>
       <td>
+        Mengirimkan sertifikat kepada mahasiswa melalui gmail
       </td>
     </tr>
   </tbody>
